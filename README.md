@@ -6,7 +6,7 @@ This project is a fork of [mvdan]. This fork contains the same formatting functi
 
 ### Usage
 
-Download it [here](https://github.com/patrickvane/shfmt/tree/master/build).
+Download it [here](https://github.com/patrickvane/shfmt/releases/tag/master).
 
 To use it in an editor (like PhpStorm etc), make a cmd like [this](https://github.com/patrickvane/shfmt/raw/master/shfmt.cmd) and then reference that (instead of the exe).
 
