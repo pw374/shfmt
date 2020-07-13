@@ -1,25 +1,19 @@
-# sh
+# shfmt
 
-[![GoDoc](https://godoc.org/mvdan.cc/sh?status.svg)](https://godoc.org/mvdan.cc/sh)
+A shell formatter. Supports [POSIX Shell], [Bash], and [mksh].
 
-A shell parser, formatter, and interpreter. Supports [POSIX Shell], [Bash], and
-[mksh]. Requires Go 1.13 or later.
+This project is a fork of [mvdan]. This fork contains the same formatting functionality as the original project, and in additional to that, several unqiue options (such as the option to disable line splitting) that weren't allowed into the original project.
 
-### Quick start
+### Usage
 
-To parse shell scripts, inspect them, and print them out, see the [syntax
-examples](https://godoc.org/mvdan.cc/sh/syntax#pkg-examples).
+Download it [here](https://github.com/patrickvane/shfmt/tree/master/build).
 
-For high-level operations like performing shell expansions on strings, see the
-[shell examples](https://godoc.org/mvdan.cc/sh/shell#pkg-examples).
+To use it in an editor (like PhpStorm etc), make a cmd like [this](https://github.com/patrickvane/shfmt/raw/master/shfmt.cmd) and then reference that (instead of the exe).
 
-### shfmt
-
-	GO111MODULE=on go get mvdan.cc/sh/v3/cmd/shfmt
+### Description
 
 `shfmt` formats shell programs. It can use tabs or any number of spaces to
-indent. See [canonical.sh](syntax/canonical.sh) for a quick look at its default
-style.
+indent.
 
 You can feed it standard input, any number of files or any number of directories
 to recurse into. When recursing, it will operate on `.sh` and `.bash` files and
@@ -55,44 +49,12 @@ switch_case_indent = true  # like -ci
 space_redirects    = true  # like -sr
 keep_padding       = true  # like -kp
 function_next_line = true  # like -fn
+never_split        = true  # like -ns
 
 # Ignore the entire "third_party" directory.
 [third_party/**]
 ignore = true
 ```
-
-Packages are available on [Alpine], [Arch], [Docker], [FreeBSD], [Homebrew],
-[MacPorts], [NixOS], [Scoop], [Snapcraft], and [Void].
-
-#### Replacing `bash -n`
-
-`bash -n` can be useful to check for syntax errors in shell scripts. However,
-`shfmt >/dev/null` can do a better job as it checks for invalid UTF-8 and does
-all parsing statically, including checking POSIX Shell validity:
-
-```sh
-$ echo '${foo:1 2}' | bash -n
-$ echo '${foo:1 2}' | shfmt
-1:9: not a valid arithmetic operator: 2
-$ echo 'foo=(1 2)' | bash --posix -n
-$ echo 'foo=(1 2)' | shfmt -p
-1:5: arrays are a bash feature
-```
-
-### gosh
-
-	GO111MODULE=on go get mvdan.cc/sh/v3/cmd/gosh
-
-Proof of concept shell that uses `interp`. Note that it's not meant to replace a
-POSIX shell at the moment, and its options are intentionally minimalistic.
-
-### Fuzzing
-
-This project makes use of [go-fuzz] to find crashes and hangs in both the parser
-and the printer. To get started, run:
-
-	git checkout fuzz
-	./fuzz
 
 ### Caveats
 
@@ -119,83 +81,10 @@ $ echo '$((foo); (bar))' | shfmt
   statically parsing them and building their syntax tree, as opposed to just
   keeping the arguments as a slice of arguments.
 
-### JavaScript
-
-A subset of the Go packages are available as an npm package called [mvdan-sh].
-See the [_js](_js) directory for more information.
-
-### Docker
-
-To build a Docker image, checkout a specific version of the repository and run:
-
-	docker build -t my:tag -f cmd/shfmt/Dockerfile .
-
-This creates an image that only includes shfmt. Alternatively, if you want an
-image that includes alpine, add `--target alpine`.
-To use the Docker image, run:
-
-	docker run --rm -v $PWD:/mnt -w /mnt my:tag <shfmt arguments>
-
-### pre-commit
-
-It is possible to use shfmt with [pre-commit][pre-commit] and a `local`
-repo configuration like:
-
-```yaml
-  - repo: local
-    hooks:
-      - id: shfmt
-        name: shfmt
-        minimum_pre_commit_version: 2.4.0
-        language: golang
-        additional_dependencies: [mvdan.cc/sh/v3/cmd/shfmt@v3.1.1]
-        entry: shfmt
-        args: [-w]
-        types: [shell]
-```
-
-### Related projects
-
-- Alternative docker images - by [jamesmstone][dockerized-jamesmstone], [PeterDaveHello][dockerized-peterdavehello]
-- [format-shell] - Atom plugin for `shfmt`
-- [micro] - Editor with a built-in plugin for `shfmt`
-- [modd] - A developer tool that responds to filesystem changes, using `sh`
-- [prettier-plugin-sh] - [Prettier] plugin using [mvdan-sh]
-- [sh-checker] - A GitHub Action that performs static analysis for shell scripts using shfmt and shellcheck
-- [shell-format] - VS Code plugin for `shfmt`
-- [shfmt.el] - Emacs package for `shfmt`
-- [Sublime-Pretty-Shell] - Sublime Text 3 plugin for `shfmt`
-- [vim-shfmt] - Vim plugin for `shfmt`
-
-[alpine]: https://pkgs.alpinelinux.org/packages?name=shfmt
-[arch]: https://www.archlinux.org/packages/community/x86_64/shfmt/
 [bash]: https://www.gnu.org/software/bash/
-[docker]: https://hub.docker.com/r/mvdan/shfmt/
-[dockerized-jamesmstone]: https://hub.docker.com/r/jamesmstone/shfmt/
-[dockerized-peterdavehello]: https://github.com/PeterDaveHello/dockerized-shfmt/
 [editorconfig]: https://editorconfig.org/
-[examples]: https://godoc.org/mvdan.cc/sh/syntax#pkg-examples
-[format-shell]: https://atom.io/packages/format-shell
-[freebsd]: https://www.freshports.org/devel/shfmt
-[go-fuzz]: https://github.com/dvyukov/go-fuzz
 [google-style]: https://google.github.io/styleguide/shell.xml
-[homebrew]: https://formulae.brew.sh/formula/shfmt
-[macports]: https://ports.macports.org/port/shfmt/summary
-[micro]: https://micro-editor.github.io/
 [mksh]: https://www.mirbsd.org/mksh.htm
-[modd]: https://github.com/cortesi/modd
-[mvdan-sh]: https://www.npmjs.com/package/mvdan-sh
-[nixos]: https://github.com/NixOS/nixpkgs/blob/HEAD/pkgs/tools/text/shfmt/default.nix
+[mvdan]: https://github.com/mvdan/sh
 [posix shell]: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 [posix-ambiguity]: https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_03
-[prettier]: https://prettier.io
-[prettier-plugin-sh]: https://github.com/rx-ts/prettier/tree/master/packages/sh
-[scoop]: https://github.com/ScoopInstaller/Main/blob/HEAD/bucket/shfmt.json
-[sh-checker]: https://github.com/luizm/action-sh-checker
-[shell-format]: https://marketplace.visualstudio.com/items?itemName=foxundermoon.shell-format
-[shfmt.el]: https://github.com/purcell/emacs-shfmt/
-[snapcraft]: https://snapcraft.io/shfmt
-[sublime-pretty-shell]: https://github.com/aerobounce/Sublime-Pretty-Shell
-[vim-shfmt]: https://github.com/z0mbix/vim-shfmt
-[void]: https://github.com/void-linux/void-packages/blob/HEAD/srcpkgs/shfmt/template
-[pre-commit]: https://pre-commit.com

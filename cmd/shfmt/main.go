@@ -48,6 +48,7 @@ var (
 	spaceRedirs = flag.Bool("sr", false, "")
 	keepPadding = flag.Bool("kp", false, "")
 	funcNext    = flag.Bool("fn", false, "")
+	neverSplit  = flag.Bool("ns", false, "")
 
 	toJSON = flag.Bool("tojson", false, "")
 
@@ -98,6 +99,7 @@ Printer options:
   -sr       redirect operators will be followed by a space
   -kp       keep column alignment paddings
   -fn       function opening braces are placed on a separate line
+  -ns       no (line) splitting, disables adding newlines to the input
 
 Utilities:
 
@@ -131,7 +133,7 @@ Utilities:
 	}
 	flag.Visit(func(f *flag.Flag) {
 		switch f.Name {
-		case "ln", "p", "i", "bn", "ci", "sr", "kp", "fn":
+		case "ln", "p", "i", "bn", "ci", "sr", "kp", "fn", "ns":
 			useEditorConfig = false
 		}
 	})
@@ -161,6 +163,7 @@ Utilities:
 		syntax.SpaceRedirects(*spaceRedirs)(printer)
 		syntax.KeepPadding(*keepPadding)(printer)
 		syntax.FunctionNextLine(*funcNext)(printer)
+		syntax.NeverSplit(*neverSplit)(printer)
 	}
 
 	if os.Getenv("FORCE_COLOR") == "true" {
@@ -301,6 +304,7 @@ func propsOptions(props editorconfig.Section) {
 	syntax.SpaceRedirects(props.Get("space_redirects") == "true")(printer)
 	syntax.KeepPadding(props.Get("keep_padding") == "true")(printer)
 	syntax.FunctionNextLine(props.Get("function_next_line") == "true")(printer)
+	syntax.NeverSplit(props.Get("never_split") == "true")(printer)
 }
 
 func formatPath(path string, checkShebang bool) error {
