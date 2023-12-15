@@ -2,7 +2,7 @@
 
 A shell formatter. Supports [POSIX Shell], [Bash], and [mksh].
 
-This project is a fork of [mvdan]. This fork contains the same formatting functionality as the original project, and in additional to that, several unqiue options (such as the option to disable line splitting) that weren't allowed into the original project.
+This project is a fork of [mvdan]. This fork contains the same formatting functionality as the original project, and in additional to that, several unique options (such as the option to disable line splitting) that weren't allowed into the original project.
 
 ### Usage
 
